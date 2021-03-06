@@ -1,65 +1,118 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { Form, Input, Button, Radio, message } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { AES } from "crypto-js";
+import Link from "next/link";
+//import { Router, Route, Link } from 'react-router'
+import { render } from 'react-dom'
+import React from "react";
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        marginTop: "10px",
+      }}
+    >
+      <h1 style={{ width: "100%", textAlign: "center", margin: "20px 0" }}>
+        Course Management Assistant
+      </h1>
+      <Form
+        name="login"
+        //className="login-form"
+        /* initialValues={{
+        remember: true,
+      }}
+      */
+        onFinish={(values) => {
+          console.log(values);
+          //加密
+          axios
+            .post("https://cms.chtoma.com/api/login", {
+              ...values,
+              password: AES.encrypt(values.password, "cms").toString(),
+            })
+            .then((res) => {
+              localStorage.setItem("cms", res.data.data);
+              //jump to another page 路由器跳转其他界面（next）
+              <link to="/dashboard"></link>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+            })
+            .catch((error) => {
+              message.error(error.response.data.msg);
+            });
+        }}
+        initialValues={{
+          role: "student",
+          email: "",
+          password: "",
+        }}
+        style={{ width: "30%" }}
+      >
+        <Form.Item
+          name="role"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+          <Radio.Group>
+            <Radio.Button value="student">Student</Radio.Button>
+            <Radio.Button value="teacher">Teacher</Radio.Button>
+            <Radio.Button value="manager">Manager</Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Email!",
+            },
+            {
+              type: "email",
+              message: "Email format invalid",
+            },
+          ]}
+        >
+          <Input prefix={<UserOutlined />} placeholder="Username" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Password!",
+            },
+            {
+              max: 16,
+              min: 4,
+              message: "password length is invalid",
+            },
+          ]}
+        >
+          <Input
+            prefix={<LockOutlined />}
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+            log in
+          </Button>
+          <div style={{ color: "red", marginTop: "10px" }}>
+            Or <a href="/dashboard">register now!</a>
+          </div>
+        </Form.Item>
+        
+      </Form>
     </div>
-  )
+  );
 }
