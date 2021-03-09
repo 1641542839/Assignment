@@ -1,13 +1,19 @@
 import { Form, Input, Button, Radio, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { AES } from "crypto-js";
+import { AES } from "crypto-js";                               
 import Link from "next/link";
 //import { Router, Route, Link } from 'react-router'
 import { render } from 'react-dom'
 import React from "react";
+import { useRouter } from 'next/router'
 
 export default function Home() {
+   const router = useRouter();
+   const onFinish = (values) => {
+     router.push('dashboard');
+   } 
+
   return (
     <div
       style={{
@@ -37,9 +43,10 @@ export default function Home() {
               password: AES.encrypt(values.password, "cms").toString(),
             })
             .then((res) => {
+              
               localStorage.setItem("cms", res.data.data);
               //jump to another page 路由器跳转其他界面（next）
-              <link to="/dashboard"></link>
+              //<link to="/dashboard"></link>
 
             })
             .catch((error) => {
@@ -108,7 +115,7 @@ export default function Home() {
             log in
           </Button>
           <div style={{ color: "red", marginTop: "10px" }}>
-            Or <a href="/dashboard">register now!</a>
+            Or <a href="">register now!</a>
           </div>
         </Form.Item>
         

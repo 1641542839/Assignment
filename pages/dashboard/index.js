@@ -1,44 +1,81 @@
-import React from "react";
-import { render } from 'react-dom'
+//import React from "react";
+import React, { useState } from "react";
+import { render } from "react-dom";
 import { Layout, Menu, Breadcrumb } from "antd";
 import {
   DesktopOutlined,
   PieChartOutlined,
   FileOutlined,
-  TeamOutlined,
+  ReadOutlined,
+  ProjectOutlined,
+  CalendarOutlined,
+  FileAddOutlined,
+  MessageOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+<link rel="stylesheet" href="index.css" type="text/css" />;
+
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-onCollapse = (collapsed) => {
-  console.log(collapsed);
-  this.setState({ collapsed });
-};
+/*const toggle = () => {
+    
+      collapsed =  !collapsed,
+    
+  };
+  */
 
 export default function Page() {
+  //const {collapsed} = false;
+  //const {setCollapsed} = false;
+  //const {collapsed, setCollapsed} = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
+  const onClick = () => {
+    axios.post("https://cms.chtoma.com/api/logout").then(() => {
+      localStorage.removeItem("cms", res.data.data);
+    });
+  };
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
-        <div className="logo" />
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+
+        <div className="logo"/>
+        <span style={{ color: "white" }}>CMS</span>
+
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]}>
+          <Menu.Item
+            icon={collapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
+            onClick={toggleCollapsed}
+          ></Menu.Item>
+          {/* <Menu.Item key="2" icon={<UserOutlined /> <Link href="/login" onClick={onClick}>
+                        Logout
+                      </Link> }></Menu.Item> */}
+          <Menu.Item key="2" icon={<UserOutlined />}></Menu.Item>
+        </Menu>
+
         <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
           <Menu.Item key="1" icon={<PieChartOutlined />}>
-            Option 1
+            Overview
           </Menu.Item>
-          <Menu.Item key="2" icon={<DesktopOutlined />}>
-            Option 2
+          <SubMenu key="sub1" icon={<ReadOutlined />} title="Course">
+            <Menu.Item key="2" icon={<ProjectOutlined />}>
+              All Course
+            </Menu.Item>
+            <Menu.Item key="3" icon={<FileAddOutlined />}>
+              My Courses
+            </Menu.Item>
+          </SubMenu>
+          <Menu.Item key="4" icon={<CalendarOutlined />}>
+            Class Schedule
           </Menu.Item>
-          <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            <Menu.Item key="3">Tom</Menu.Item>
-            <Menu.Item key="4">Bill</Menu.Item>
-            <Menu.Item key="5">Alex</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-            <Menu.Item key="6">Team 1</Menu.Item>
-            <Menu.Item key="8">Team 2</Menu.Item>
-          </SubMenu>
-          <Menu.Item key="9" icon={<FileOutlined />}>
-            Files
+          <Menu.Item key="5" icon={<MessageOutlined />}>
+            Message
           </Menu.Item>
         </Menu>
       </Sider>
