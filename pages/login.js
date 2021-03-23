@@ -10,9 +10,9 @@ import { useRouter } from 'next/router'
 
 export default function Home() {
    const router = useRouter();
-   const onFinish = (values) => {
-     router.push('dashboard');
-   } 
+  //  const onFinish = (values) => {
+  //    router.push('dashboard');
+  //  } 
 
   return (
     <div
@@ -45,8 +45,7 @@ export default function Home() {
             .then((res) => {
               
               localStorage.setItem("cms", res.data.data);
-              //jump to another page 路由器跳转其他界面（next）
-              //<link to="/dashboard"></link>
+              router.push('/dashboard/overview');
 
             })
             .catch((error) => {
